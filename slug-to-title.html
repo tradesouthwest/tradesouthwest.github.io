@@ -8,7 +8,10 @@
         .container { max-width: 600px; margin: auto; border: 1px solid #ccc; padding: 20px; border-radius: 8px; background: beige;}
         input { width: 100%; padding: 10px; margin: 10px 0; box-sizing: border-box; }
         .result-box { background: #f4f4f4; padding: 15px; border-left: 5px solid #333; margin-top: 20px; }
-        label { font-weight: bold; }
+        label { font-weight: bold; } .warning { color: #d9534f; font-weight: bold; display: none; }
+        .counter { font-size: 0.9em; color: #666; }
+        input { width: 100%; padding: 8px; margin: 10px 0; }
+        #output { background: #f4f4f4; padding: 10px; border: 1px solid #ccc; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -21,11 +24,38 @@
     <input type="text" id="slugInput" placeholder="e.g., editorial-rules-for-warsww" oninput="convertSlug()">
 
     <div class="result-box">
-        <strong>Formatted Title:</strong>
+        <div>
+        <strong>Generated Title:</strong>
+        <div id="output">Title will appear here...</div>
+        <p class="counter">Character count: <span id="charCount">0</span>/60</p>
+        <p id="seoWarning" class="warning">⚠️ Warning: Title exceeds 60 characters and may be truncated in search results.</p>
+    </div>
         <p id="titleOutput">Waiting for input...</p>
     </div>
 </div>
+<script>
+        function convertSlug() {
+            const input = document.getElementById('slugInput').value;
+            const output = document.getElementById('output');
+            const charCount = document.getElementById('charCount');
+            const warning = document.getElementById('seoWarning');
 
+            // Logic: Remove hyphens/underscores and capitalize words
+            let title = input.replace(/[-_]/g, ' ')
+                             .replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+
+            output.innerText = title || "Title will appear here...";
+            charCount.innerText = title.length;
+
+            // Display warning if over 60 characters
+            if (title.length > 60) {
+                warning.style.display = 'block';
+            } else {
+                warning.style.display = 'none';
+            }
+        }
+    </script>
+    <!--
 <script>
     function convertSlug() {
         const slug = document.getElementById('slugInput').value;
@@ -38,7 +68,7 @@
 
         document.getElementById('titleOutput').innerText = formattedTitle || "Waiting for input...";
     }
-</script>
+</script> -->
 
 </body>
 </html>
